@@ -2,6 +2,7 @@ package one.digitalinovation.laboojava.negocio;
 
 import one.digitalinovation.laboojava.basedados.Banco;
 import one.digitalinovation.laboojava.entidade.Cliente;
+import one.digitalinovation.laboojava.entidade.Produto;
 
 import java.util.Optional;
 
@@ -30,24 +31,43 @@ public class ClienteNegocio {
      * @return O cliente que possuir o CPF passado.
      */
     public Optional<Cliente> consultar(String cpf) {
-
-        if (bancoDados.getCliente().getCpf().equals(cpf)) {
-            return Optional.of(bancoDados.getCliente());
-        } else {
-            return Optional.empty();
+        for (Cliente c : bancoDados.getClientes()) {
+            if (c.getCpf().equals(cpf)) {
+                return Optional.of(c);
+            }
         }
+
+        return Optional.empty();
     }
 
     /**
      * Cadastra um novo cliente.
      * @param cliente Novo cliente que terá acesso a aplicação
      */
-    //TODO Fazer a inclusão de cliente
+    public void cadastrar(Cliente cliente) {
+
+        boolean clienteJaCadastrado = false;
+        for (Cliente c : bancoDados.getClientes()) {
+            if (c.getCpf().equals(cliente.getCpf())) {
+                clienteJaCadastrado = true;
+                System.out.println("Cliente já cadastrado.");
+                break;
+            }
+        }
+
+        if(!clienteJaCadastrado) {
+            this.bancoDados.adicionarCliente(cliente);
+            System.out.println("Cliente cadastrado com sucesso.");
+        }
+    }
 
     /**
      * Exclui um cliente específico.
      * @param cpf CPF do cliente
      */
-    //TODO Fazer a exclusão de cliente
 
+    public void excluirCliente(String cpf) {
+        this.bancoDados.removerCliente(cpf);
+        System.out.println("Cliente excluido com sucesso.");
+    }
 }
